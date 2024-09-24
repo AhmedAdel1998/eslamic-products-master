@@ -1,0 +1,194 @@
+<form [formGroup]="idform" class="mt-3">
+    <div class="dataCard row p-5 border-rounded align-items-start">
+        <mat-form-field appearance="fill" class="col-4">
+            <mat-label>الرقم القومى للعميل</mat-label>
+            <input matInput placeholder="" formControlName="idNo" maxlength="14" (blur)="searchForClient()">
+            @if(idNo?.hasError('required')) {
+            <mat-error>
+                !لابد من اختيار قيمة
+            </mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-4" >
+            <input matInput placeholder="إسم العميل" formControlName="clientName">
+        </mat-form-field>
+        <button mat-stroked-button class="col-2 height" [disabled]="!idform.valid || nonvalid" (click)="goToclientData()">إنتقل الي بيانات العميل</button>
+    </div>
+</form>
+
+@if(newClient){
+<form [formGroup]="clientForm">
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">اثبات الشخصية</mat-card-title>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الرقم القومى للعميل</mat-label>
+            <input matInput placeholder="" formControlName="idNumber" >
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>تاريخ اصدار اثبات الشخصية</mat-label>
+            <input matInput placeholder="" required formControlName="idIssueDate" >
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-12" >
+            <mat-label>نوع العميل</mat-label>
+            <mat-select required formControlName="userType" >
+                <mat-option  [value]="1">1 - عميل </mat-option>
+                <mat-option  [value]="2">2 - ضامن</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">بيانات العميل</mat-card-title>
+        <mat-form-field appearance="fill" class="col-6" >
+            <mat-label>اللقب</mat-label>
+            <mat-select required  formControlName="titleCode" >
+                <mat-option  [value]="2">السيدة</mat-option>
+                <mat-option [value]="1">السيد</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6" disabled>
+            <mat-label >الاسم الاول</mat-label>
+            <input matInput placeholder="" formControlName="rstName">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الاسم الثاني </mat-label>
+            <input matInput placeholder="" formControlName="ndName">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الاسم الثالث</mat-label>
+            <input matInput placeholder="" formControlName="rdName">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الاسم الأخير </mat-label>
+            <input matInput placeholder="" formControlName="stName">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الاسم الشهرة</mat-label>
+            <input matInput placeholder="" formControlName="nickName">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>تاريخ الميلاد</mat-label>
+            <input matInput placeholder="" formControlName="birthDate">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>النوع</mat-label>
+            <mat-select formControlName="sex">
+                <mat-option [value]="1">ذكر</mat-option>
+                <mat-option [value]="2">انثى</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-12">
+            <mat-label>الجنسيه </mat-label>
+            <mat-select formControlName="idCountry">
+                <mat-option [value]="1">مصري</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">العنوان كما هو فى البطاقه</mat-card-title>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المحافظة</mat-label>
+            <mat-select formControlName="cityCode1">
+                @for (city of cities; track $index) {
+                    <mat-option [value]="city.cityCode">{{city.cityName}} - {{city.cityCode}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المركز أو القسم</mat-label>
+            <mat-select formControlName="regionCode1">
+                @for (region of regions; track $index) {
+                    <mat-option [value]="region.regionCode">{{region.regionName}} - {{region.regionCode}}</mat-option>
+                }
+            </mat-select>               
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المنطقة أو الحي</mat-label>
+            <mat-select formControlName="villageCode1">
+                @for (village of villages; track $index) {
+                    <mat-option [value]="village.villageCode">{{village.villageName}} - {{village.villageCode}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الشارع</mat-label>
+            <input matInput placeholder="" formControlName="street1">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-12">
+            <mat-label>رقم المبنى</mat-label>
+            <input matInput placeholder="" formControlName="buildingNo1">
+        </mat-form-field>
+    </div>
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">وصف تفصيلي للعنوان</mat-card-title>
+        <mat-radio-group class="col-6" formControlName="same">
+            <mat-radio-button [value]="1">غيره</mat-radio-button>
+            <mat-radio-button [value]="2"> نفسه</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المحافظة</mat-label>
+            <mat-select formControlName="cityCode2">
+                @for (city of cities; track $index) {
+                    <mat-option [value]="city.cityCode">{{city.cityName}} - {{city.cityCode}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المركز أو القسم</mat-label>
+            <mat-select formControlName="regionCode2">
+                @for (region of regions; track $index) {
+                    <mat-option [value]="region.regionCode">{{region.regionName}} - {{region.regionCode}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>المنطقة أو الحي</mat-label>
+            <mat-select formControlName="villageCode2">
+                @for (village of villages; track $index) {
+                    <mat-option [value]="village.villageCode">{{village.villageName}} - {{village.villageCode}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>الشارع</mat-label>
+            <input matInput placeholder="" formControlName="street2">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>رقم المبنى</mat-label>
+            <input matInput placeholder="" formControlName="buildingNo2">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-12">
+            <mat-label>علامة</mat-label>
+            <input matInput placeholder="" formControlName="homeMark1">
+        </mat-form-field>
+    </div>
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">عنوان العمل</mat-card-title>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>عنوان العمل</mat-label>
+            <input matInput placeholder="" formControlName="addTxt">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>علامة</mat-label>
+            <input matInput placeholder="" formControlName="homeMark2">
+        </mat-form-field>
+    </div>
+    <div class="dataCard row p-5 border-rounded align-items-center">
+        <mat-card-title class="mb-3">وسائل الاتصال</mat-card-title>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>رقم الهاتف المحمول</mat-label>
+            <input matInput placeholder="" formControlName="phoneNo1">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="col-6">
+            <mat-label>رقم هاتف محمول اخر </mat-label>
+            <input matInput placeholder="" formControlName="phoneNo2">
+        </mat-form-field>
+    </div>
+    <!-- <div class="d-flex justify-content-end mt-3">
+            <button mat-flat-button class="save">حفظ</button>
+        </div> -->
+    <div class="d-flex justify-content-end mt-3">
+        <button mat-flat-button matStepperPrevious>الرجوع</button>
+        <button mat-flat-button matStepperNext>حفظ</button>
+    </div>
+</form>
+}

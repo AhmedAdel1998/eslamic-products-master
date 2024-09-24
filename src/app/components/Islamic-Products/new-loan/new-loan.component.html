@@ -1,0 +1,399 @@
+<div class="d-flex justify-content-between align-items-center" dir="rtl">
+    <p class="pageTitle">
+        شاشة إدخال طلبات التمويل الاسلامي
+    </p>
+</div>
+<mat-stepper dir="rtl" class="example-stepper m-5 mt-0  bg-transparent" [orientation]="'vertical'" >
+    <mat-step  label="بيانات طلب التمويل">
+        <form class="row p-3" [formGroup]="loanDataForm">
+            <div class="dataCard row p-5 border-rounded">
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم الطلب</mat-label>
+                    <input matInput placeholder="" formControlName="loanNumber">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>نوع التمويل</mat-label>
+                    <mat-select required formControlName="productType" >
+                        @for (product of products$ | async; track $index) {
+                            <mat-option [value]="product">{{product.aname}}</mat-option>
+                        }
+                    </mat-select>
+                    @if (loanValue?.hasError('required')) {
+                        <mat-error>
+                          !لابد من اختيار قيمة
+                        </mat-error>
+                      }
+                </mat-form-field>
+                <div class="col-6">
+                    <mat-label>حالة الطلب</mat-label>
+                    <mat-radio-group aria-label="حالة الطلب" formControlName="loanState">
+                        <mat-radio-button value="new">جديد</mat-radio-button>
+                        <mat-radio-button value="renew">تجديد</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>عملة التمويل</mat-label>
+                    <mat-select formControlName="currency">
+                        <mat-option value="EGP">1 - جنية مصري</mat-option>
+                        @for (product of products$ | async; track $index) {
+                            <mat-option value="{{product.loanType}}">{{product.aname}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>قيمة التمويل الاسلامي</mat-label>
+                    <input matInput placeholder="" formControlName="loanValue">
+                    @if (loanValue?.hasError('min')) {
+                        <mat-error>
+                            لابد من ادخال قيمة لا تقل عن {{selectedProduct.minAmt}}
+                        </mat-error>
+                      }
+                      @if (loanValue?.hasError('max')) {
+                        <mat-error>
+                            {{selectedProduct.maxAmt}} لابد من ادخال قيمة لا تقل عن
+                        </mat-error>
+                      }
+                      @if (loanValue?.hasError('required')) {
+                        <mat-error>
+                          !لابد من ادخال قيمة
+                        </mat-error>
+                      }
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>فترة السداد بعدد الاقساط</mat-label>
+                    <input matInput placeholder="" formControlName="loanDuration">
+                    @if (loanDuration?.hasError('required')) {
+                        <mat-error>
+                          !لابد من ادخال قيمة
+                        </mat-error>
+                      }
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>مدة التمويل الاسلامي</mat-label>
+                    <input matInput placeholder="" formControlName="totalLoanDuration">
+                </mat-form-field>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button mat-flat-button matStepperNext>حفظ</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="العميل">
+        <app-client></app-client>
+    </mat-step>
+    
+    <mat-step label="الكفيل">
+        <form>
+            <div class="dataCard row p-5 border-rounded align-items-start">
+                <mat-form-field appearance="fill" class="col-4">
+                    <mat-label>الرقم القومى للكفيل</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-4">
+                    <input matInput placeholder="إسم الكفيل" required>
+                </mat-form-field>
+                <button mat-stroked-button class="col-2 height">إنتقل الي بيانات الكفيل</button>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">اثبات الشخصية</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم اثبات الشخصية</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>تاريخ اصدار اثبات الشخصية</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>نوع العميل</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3"> بيانات الكفيل</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>اللقب</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم الاول</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم الثاني </mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم الثالث</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم الأخير </mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم الشهرة</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>تاريخ الميلاد</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>النوع</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>الجنسيه </mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">العنوان كما هو فى البطاقه</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المحافظة</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المركز أو القسم</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المنطقة أو الحي</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الشارع</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>رقم المبنى</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">وصف تفصيلي للعنوان</mat-card-title>
+                <mat-radio-group class="col-6">
+                    <mat-radio-button value="1">غيره</mat-radio-button>
+                    <mat-radio-button value="2"> نفسه</mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المحافظة</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المركز أو القسم</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المنطقة أو الحي</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الشارع</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم المبنى</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>علامة</mat-label>
+                    <input matInput placeholder="">
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">عنوان العمل</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>عنوان العمل</mat-label>
+                    <input matInput placeholder="">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>علامة</mat-label>
+                    <input matInput placeholder="">
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">وسائل الاتصال</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم الهاتف المحمول</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم هاتف محمول اخر </mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+            </div>
+            <!-- <div class="d-flex justify-content-end mt-3">
+                <button mat-flat-button class="save">حفظ</button>
+            </div> -->
+            <div class="d-flex justify-content-end mt-3">
+                <button mat-flat-button matStepperPrevious>الرجوع</button>
+                <button mat-flat-button matStepperNext>حفظ</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="المنشأة">
+        <form>
+            <div class="dataCard row p-5 border-rounded align-items-start">
+                <mat-form-field appearance="fill" class="col-9">
+                    <mat-label>المنشأة</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-stroked-button class="col-1 height">إضافة منشأة</button>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">التصنيف القطاعي</mat-card-title>
+                <mat-form-field appearance="fill" class="col-9">
+                    <mat-label>القطاع / النشاط الأساسى /النشاط الفرعى</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-4">
+                    <mat-label> القطاع </mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-4">
+                    <mat-label>النشاط الاساسى</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-4">
+                    <mat-label>النشاط الفرعى</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الاسم التجارى للمنشأه</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>طبيعه المنشأه</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+
+
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">وصف تفصيلي للعنوان</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المحافظة</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المركز أو القسم</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>المنطقة أو الحي</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>الشارع</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>رقم المبنى</mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>علامة</mat-label>
+                    <input matInput placeholder="">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>عنوان المنشأه2</mat-label>
+                    <input matInput placeholder="">
+                </mat-form-field>
+            </div>
+            <div class="dataCard row p-5 border-rounded align-items-center">
+                <mat-card-title class="mb-3">موقع المنشأة</mat-card-title>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>نوع موقع المنشأه</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-6">
+                    <mat-label>ملكيه موقع المنشأه</mat-label>
+                    <mat-select required>
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-12">
+                    <mat-label>عدد السنوات فى موقع المنشأه الحالى </mat-label>
+                    <input matInput placeholder="" required>
+                </mat-form-field>
+
+            </div>
+        </form>
+        <div class="d-flex justify-content-end mt-3">
+            <button mat-flat-button class="save">حفظ</button>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button mat-flat-button matStepperPrevious>الرجوع</button>
+        </div>
+    </mat-step>
+</mat-stepper>

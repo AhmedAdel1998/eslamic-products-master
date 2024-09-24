@@ -1,0 +1,13 @@
+:host ::ng-deep .p-password{
+    width: 100% !important;
+}
+.pageTitle{
+    color: #3a49a1;
+    font-size: 100px;
+    font-family: diwani;
+    padding-bottom: 180px;
+    margin: 0px;
+}
+form{
+    color: #3a49a1;
+}
